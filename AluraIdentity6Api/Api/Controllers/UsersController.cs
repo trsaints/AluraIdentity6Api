@@ -5,10 +5,10 @@ namespace AluraIdentity6Api.Api.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
-public class UsuariosController : ControllerBase
+public class UsersController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Cadastrar([FromBody] CreateUsuarioModel model)
+    public IActionResult Cadastrar([FromBody] CreateUserModel model)
     {
         throw new NotImplementedException();
     }

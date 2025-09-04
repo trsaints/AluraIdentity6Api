@@ -4,9 +4,9 @@ using AluraIdentity6Api.Infra.Data.Mappers.Interfaces;
 
 namespace AluraIdentity6Api.Infra.Data.Mappers;
 
-public class UsuarioMapper : IMapper<AppUser, CreateUsuarioModel>
+public class UserMapper : IMapper<AppUser, CreateUserModel>
 {
-    public AppUser? ToDomainModel(CreateUsuarioModel value)
+    public AppUser? ToDomainModel(CreateUserModel value)
     {
         AppUser result = new()
         {
@@ -15,9 +15,9 @@ public class UsuarioMapper : IMapper<AppUser, CreateUsuarioModel>
         return result;
     }
 
-    public CreateUsuarioModel? ToRequestModel(AppUser model)
+    public CreateUserModel? ToRequestModel(AppUser model)
     {
-        CreateUsuarioModel result = new()
+        CreateUserModel result = new()
         {
         };
 

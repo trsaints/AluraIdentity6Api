@@ -2,7 +2,7 @@
 
 namespace AluraIdentity6Api.Api.RequestModels;
 
-public record CreateUsuarioModel
+public record CreateUserModel
 {
     [Required]
     public string? UserName { get; init; }
