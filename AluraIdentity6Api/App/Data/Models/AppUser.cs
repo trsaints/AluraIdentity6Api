@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AluraIdentity6Api.App.Data.Models;
 
@@ -22,6 +23,8 @@ public class AppUser : IdentityUser<int>, ITrackable
     public DateTime? BirthDate { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
+
+    [NotMapped]
     public string? Name { 
         get => throw new NotImplementedException(); 
         set => throw new NotImplementedException(); 
