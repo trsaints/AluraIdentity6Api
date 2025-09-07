@@ -5,7 +5,13 @@ namespace AluraIdentity6Api.Api.RequestModels;
 public record CreateUserModel
 {
     [Required]
-    public string? UserName { get; init; }
+    public required string Cpf { get; init; }
+
+    [Required]
+    public string? FullName { get; init; }
+
+    [Required]
+    public required string UserName { get; init; }
 
     [Required]
     public DateTime BirthDate { get; init; }
