@@ -10,6 +10,11 @@ public class UserMapper : IMapper<AppUser, CreateUserModel>
     {
         AppUser result = new()
         {
+            Cpf = value.Cpf,
+            FullName = value.FullName,
+            UserName = value.UserName,
+            BirthDate = value.BirthDate,
+            Email = value.UserName,
         };
 
         return result;
@@ -19,6 +24,12 @@ public class UserMapper : IMapper<AppUser, CreateUserModel>
     {
         CreateUserModel result = new()
         {
+            Cpf = model.Cpf,
+            FullName = model.FullName,
+            UserName = model.UserName ?? string.Empty,
+            BirthDate = model.BirthDate ?? DateTime.MinValue,
+            Password = null!,
+            ConfirmPassword = null!
         };
 
         return result;
