@@ -26,7 +26,7 @@ public class AppUser : IdentityUser<int>, ITrackable
 
     [NotMapped]
     public string? Name { 
-        get => throw new NotImplementedException(); 
-        set => throw new NotImplementedException(); 
+        get => throw new InvalidOperationException($"Use {nameof(FullName)}'s getter instead."); 
+        set => throw new InvalidOperationException($"Use {nameof(FullName)}'s setter instead."); 
     }
 }
