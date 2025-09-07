@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace AluraIdentity6Api.App.Data.Models;
 
 [Index(nameof(Cpf), IsUnique = true)]
-public class AppUser : IdentityUser<string>, ITrackable
+public class AppUser : IdentityUser<int>, ITrackable
 {
     [Required]
     [ProtectedPersonalData]
