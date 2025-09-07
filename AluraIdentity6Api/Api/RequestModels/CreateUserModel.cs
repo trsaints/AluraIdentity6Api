@@ -8,7 +8,7 @@ public record CreateUserModel
     public string? UserName { get; init; }
 
     [Required]
-    public DateTime DataNascimento { get; init; }
+    public DateTime BirthDate { get; init; }
 
     [Required]
     [DataType(DataType.Password)]
