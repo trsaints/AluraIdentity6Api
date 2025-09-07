@@ -28,8 +28,8 @@ public class UserMapper : IMapper<AppUser, CreateUserModel>
             FullName = model.FullName,
             UserName = model.UserName ?? string.Empty,
             BirthDate = model.BirthDate ?? DateTime.MinValue,
-            Password = null!,
-            ConfirmPassword = null!
+            Password = string.Empty,
+            ConfirmPassword = string.Empty
         };
 
         return result;
