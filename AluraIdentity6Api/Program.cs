@@ -1,4 +1,7 @@
+using AluraIdentity6Api.App.Data.Models;
+using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Startup;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDataMappers();
 builder.Services.AddDatabase(builder.Configuration);
+
+builder.Services.AddIdentityCore<AppUser>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
