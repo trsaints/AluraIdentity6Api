@@ -1,15 +1,44 @@
 ﻿using AluraIdentity6Api.Api.RequestModels;
+using AluraIdentity6Api.App.Data.Models;
+using AluraIdentity6Api.Infra.Data.Mappers.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AluraIdentity6Api.Api.Controllers;
 
 [ApiController]
 [Route("[Controller]")]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public class UsersController : ControllerBase
 {
-    [HttpPost]
-    public IActionResult Cadastrar([FromBody] CreateUserModel model)
+    private readonly ILogger<UsersController> _logger;
+    private readonly IMapper<AppUser, CreateUserModel> _mapper;
+    private readonly UserManager<AppUser> _manager;
+
+    public UsersController(ILogger<UsersController> logger,
+        IMapper<AppUser, CreateUserModel> mapper,
+        UserManager<AppUser> manager)
     {
-        throw new NotImplementedException();
+        _logger = logger;
+        _mapper = mapper;
+        _manager = manager;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateUserModel model)
+    {
+        var mappedUser = _mapper.ToDomainModel(model);
+
+        if (mappedUser is null) return BadRequest();
+
+        var result = await _manager.CreateAsync(mappedUser, model.Password);
+
+        if (!result.Succeeded) return BadRequest(result.Errors);
+
+        var dto = _mapper.ToRequestModel(mappedUser);
+
+        return Created($"/users/{mappedUser.Id}", dto);
     }
 }
