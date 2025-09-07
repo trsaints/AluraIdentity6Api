@@ -1,6 +1,6 @@
 services:
   aluraidentity6api:
-    image: ${DOCKER_REGISTRY-}aluraidentity6api
+    image: aluraidentity6api
     build:
       context: .
       dockerfile: AluraIdentity6Api/Dockerfile
@@ -14,3 +14,10 @@ services:
         - "5432:5432"
       volumes:
         - pgdata:/var/lib/postgresql/data
+
+networks:
+    aluraidentity6api-network:
+        driver: bridge    
+  
+volumes:
+    pgdata:
