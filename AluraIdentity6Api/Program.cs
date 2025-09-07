@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDataMappers();
 builder.Services.AddDatabase(builder.Configuration);
-
+builder.Services.AddDataProtection();
 builder.Services.AddIdentityCore<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
