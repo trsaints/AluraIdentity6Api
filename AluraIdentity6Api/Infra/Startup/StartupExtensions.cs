@@ -15,7 +15,7 @@ public static class StartupExtensions
         services.AddSingleton<IMapper<AppUser, CreateUserModel>, UserMapper>();
     }
 
-    public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString(AppDbConstants.DefaultConnectionStringName) 
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
