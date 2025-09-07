@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AluraIdentity6Api.App.Data.Models;
 
+[Index(nameof(Cpf), IsUnique = true)]
 public class AppUser : IdentityUser<string>, ITrackable
 {
-    public string? Name { get; set; }
+    public required string Cpf { get; set; }
+    public string? FullName { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
 }
