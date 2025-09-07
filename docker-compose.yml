@@ -1,0 +1,6 @@
+services:
+  aluraidentity6api:
+    image: ${DOCKER_REGISTRY-}aluraidentity6api
+    build:
+      context: .
+      dockerfile: AluraIdentity6Api/Dockerfile
