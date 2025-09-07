@@ -8,10 +8,17 @@ namespace AluraIdentity6Api.App.Data.Models;
 [Index(nameof(Cpf), IsUnique = true)]
 public class AppUser : IdentityUser<string>, ITrackable
 {
+    [Required]
+    [ProtectedPersonalData]
+    [StringLength(11)]
     public required string Cpf { get; set; }
+
+    [Required]
+    [ProtectedPersonalData]
     public string? FullName { get; set; }
 
     [Required]
+    [ProtectedPersonalData]
     public DateTime? BirthDate { get; set; }
     public DateTime CreatedAt { get; init; }
     public DateTime UpdatedAt { get; set; }
