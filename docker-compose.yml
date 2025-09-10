@@ -10,9 +10,11 @@ services:
       environment:
         POSTGRES_USER: root
         POSTGRES_PASSWORD: root
+        POSTGRES_DB: aluraidentity6api
       ports:
         - "5432:5432"
       volumes:
+        - ./AluraIdentity6Api/Infra/Data/Database/Migrations/schema.sql:/docker-entrypoint-initdb.d/init.sql
         - pgdata:/var/lib/postgresql/data
 
 networks:
