@@ -1,5 +1,6 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.App.Services.Interfaces;
+using AluraIdentity6Api.App.Validations;
 using Microsoft.AspNetCore.Identity;
 
 namespace AluraIdentity6Api.App.Services;
@@ -15,6 +16,11 @@ public class UserService : IModelService<AppUser>
 
     public async Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
     {
+        ValidCpfSpecification firstSpec = new();
+
+        if (!firstSpec.IsSatisfiedBy(entity)) 
+            return ServiceResult<AppUser>.Fail(["CPF Inválido"]);
+
         var result = await _manager.CreateAsync(entity);
 
         if (result.Succeeded)
