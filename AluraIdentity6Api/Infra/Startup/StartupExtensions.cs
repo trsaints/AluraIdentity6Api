@@ -1,5 +1,7 @@
 ﻿using AluraIdentity6Api.Api.RequestModels;
 using AluraIdentity6Api.App.Data.Models;
+using AluraIdentity6Api.App.Services;
+using AluraIdentity6Api.App.Services.Interfaces;
 using AluraIdentity6Api.Infra.Data.Constants;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Data.Mappers;
@@ -21,5 +23,10 @@ public static class StartupExtensions
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+    }
+
+    public static void AddAppServices(this IServiceCollection services)
+    {
+        services.AddScoped<IModelService<AppUser>, UserService>();
     }
 }

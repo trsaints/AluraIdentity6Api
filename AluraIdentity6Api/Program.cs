@@ -17,6 +17,7 @@ builder.Services.AddDataProtection();
 builder.Services.AddIdentityCore<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddAppServices();
 
 var app = builder.Build();
 
