@@ -1,7 +1,7 @@
 ﻿using AluraIdentity6Api.Api.RequestModels;
 using AluraIdentity6Api.App.Data.Models;
+using AluraIdentity6Api.App.Services.Interfaces;
 using AluraIdentity6Api.Infra.Data.Mappers.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AluraIdentity6Api.Api.Controllers;
@@ -15,25 +15,26 @@ public class UsersController : ControllerBase
 {
     private readonly ILogger<UsersController> _logger;
     private readonly IMapper<AppUser, CreateUserModel> _mapper;
-    private readonly UserManager<AppUser> _manager;
+    private readonly IModelService<AppUser> _service;
 
     public UsersController(ILogger<UsersController> logger,
         IMapper<AppUser, CreateUserModel> mapper,
-        UserManager<AppUser> manager)
+        IModelService<AppUser> service)
     {
         _logger = logger;
         _mapper = mapper;
-        _manager = manager;
+        _service = service;
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateUserModel model)
     {
         var mappedUser = _mapper.ToDomainModel(model);
 
         if (mappedUser is null) return BadRequest();
 
-        var result = await _manager.CreateAsync(mappedUser, model.Password);
+        var result = await _service.CreateAsync(mappedUser);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 

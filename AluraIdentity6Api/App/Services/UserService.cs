@@ -1,13 +1,26 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.App.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace AluraIdentity6Api.App.Services;
 
 public class UserService : IModelService<AppUser>
 {
-    public Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
+    private readonly UserManager<AppUser> _manager;
+
+    public UserService(UserManager<AppUser> manager)
     {
-        throw new NotImplementedException();
+        _manager = manager;
+    }
+
+    public async Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
+    {
+        var result = await _manager.CreateAsync(entity);
+
+        if (result.Succeeded)
+            return ServiceResult<AppUser>.Ok(entity);
+
+        return ServiceResult<AppUser>.Fail(result.Errors.Select(e => e.Description));
     }
 
     public Task<ServiceResult<AppUser>> DeleteAsync(int id)
