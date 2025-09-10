@@ -10,7 +10,7 @@ public class ServiceResult<T> : IServiceResult<T>
 
     public T? Data { get; init; }
 
-    public static IServiceResult<T> Fail(IEnumerable<string> errors)
+    public static ServiceResult<T> Fail(IEnumerable<string> errors)
     {
         return new ServiceResult<T>()
         {
@@ -20,7 +20,7 @@ public class ServiceResult<T> : IServiceResult<T>
         };
     }
 
-    public static IServiceResult<T> Ok(T data)
+    public static ServiceResult<T> Ok(T data)
     {
         return new ServiceResult<T>()
         {
