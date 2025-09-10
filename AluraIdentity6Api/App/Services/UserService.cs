@@ -17,9 +17,13 @@ public class UserService : IModelService<AppUser>
     public async Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
     {
         ValidCpfSpecification firstSpec = new();
+        MinRequiredAgeSpecification secondSpec = new();
 
         if (!firstSpec.IsSatisfiedBy(entity)) 
             return ServiceResult<AppUser>.Fail(["CPF Inválido"]);
+
+        if (!secondSpec.IsSatisfiedBy(entity))
+            return ServiceResult<AppUser>.Fail(["Usuário deve ter no mínimo 21 anos"]);
 
         var result = await _manager.CreateAsync(entity);
 
