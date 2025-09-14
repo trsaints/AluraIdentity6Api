@@ -2,16 +2,20 @@
 using AluraIdentity6Api.App.Services.Interfaces;
 using AluraIdentity6Api.App.Validations;
 using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace AluraIdentity6Api.App.Services;
 
 public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _manager;
+    private readonly SignInManager<AppUser> _signInManager;
 
-    public UserService(UserManager<AppUser> manager)
+    public UserService(UserManager<AppUser> manager,
+        SignInManager<AppUser> signInManager)
     {
         _manager = manager;
+        _signInManager = signInManager;
     }
 
     public async Task<ServiceResult<AppUser>> CreateAsync(AppUser user, string password)
@@ -51,6 +55,37 @@ public class UserService : IUserService
     public Task<ServiceResult<AppUser>> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<ServiceResult<AppUser>> LoginAsync(string email, string password)
+    {
+        var user = await _manager.FindByEmailAsync(email);
+
+        if (user is null)
+            return ServiceResult<AppUser>.Fail(["Usuário não encontrado"]);
+
+        NewUserStatusSpecification newUserStatusSpec = new();
+
+        if (newUserStatusSpec.IsSatisfiedBy(user))
+        {
+            return ServiceResult<AppUser>.Fail(["Conta não confirmada"]);
+        }
+
+        if (user.LockoutEnabled)
+        {
+            await _manager.SetLockoutEndDateAsync(user,
+                DateTimeOffset.UtcNow + TimeSpan.FromMinutes(30));
+
+            return ServiceResult<AppUser>.Fail([$"Usuário bloqueado até {user.LockoutEnd:dd/MM/yyyy}"]);
+        }
+
+        var result = await _signInManager.CheckPasswordSignInAsync(user,
+            password,
+            false);
+
+        if (result.Succeeded) return ServiceResult<AppUser>.Ok(user);
+
+        return ServiceResult<AppUser>.Fail(["Email ou senha inválidos"]);
     }
 
     public Task<ServiceResult<AppUser>> UpdateAsync(AppUser entity)

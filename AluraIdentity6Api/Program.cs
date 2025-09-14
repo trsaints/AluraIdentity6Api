@@ -16,11 +16,13 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddDataProtection();
 builder.Services.AddIdentityCore<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddSignInManager();
 
 builder.Services.ConfigureIdentity();
 
 builder.Services.AddAppServices();
+builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.AddExceptionHandler(options =>
 {

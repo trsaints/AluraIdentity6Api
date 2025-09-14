@@ -42,4 +42,16 @@ public class UsersController : ControllerBase
 
         return Created($"/users/{mappedUser.Id}", dto);
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginUserModel model)
+    {
+        var result = await _service.LoginAsync(model.Email!, model.Password!);
+
+        if (!result.Succeeded) return BadRequest(result.Errors);
+
+        var dto = _mapper.ToRequestModel(result.Data!);
+
+        return Ok(dto);
+    }
 }
