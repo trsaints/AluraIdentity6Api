@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace AluraIdentity6Api.App.Services;
 
-public class UserService : IModelService<AppUser>
+public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _manager;
 
@@ -14,23 +14,28 @@ public class UserService : IModelService<AppUser>
         _manager = manager;
     }
 
-    public async Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
+    public async Task<ServiceResult<AppUser>> CreateAsync(AppUser user, string password)
     {
         ValidCpfSpecification firstSpec = new();
         MinRequiredAgeSpecification secondSpec = new();
 
-        if (!firstSpec.IsSatisfiedBy(entity)) 
+        if (!firstSpec.IsSatisfiedBy(user))
             return ServiceResult<AppUser>.Fail(["CPF Inválido"]);
 
-        if (!secondSpec.IsSatisfiedBy(entity))
+        if (!secondSpec.IsSatisfiedBy(user))
             return ServiceResult<AppUser>.Fail(["Usuário deve ter no mínimo 21 anos"]);
 
-        var result = await _manager.CreateAsync(entity);
+        var result = await _manager.CreateAsync(user, password);
 
         if (result.Succeeded)
-            return ServiceResult<AppUser>.Ok(entity);
+            return ServiceResult<AppUser>.Ok(user);
 
         return ServiceResult<AppUser>.Fail(result.Errors.Select(e => e.Description));
+    }
+
+    public Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
+    {
+        throw new InvalidOperationException("Use o método Create(AppUser user, string password) para criar um usuário com senha.");
     }
 
     public Task<ServiceResult<AppUser>> DeleteAsync(int id)

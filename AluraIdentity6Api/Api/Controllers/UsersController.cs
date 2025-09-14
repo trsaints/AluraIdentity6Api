@@ -15,11 +15,11 @@ public class UsersController : ControllerBase
 {
     private readonly ILogger<UsersController> _logger;
     private readonly IMapper<AppUser, CreateUserModel> _mapper;
-    private readonly IModelService<AppUser> _service;
+    private readonly IUserService _service;
 
     public UsersController(ILogger<UsersController> logger,
         IMapper<AppUser, CreateUserModel> mapper,
-        IModelService<AppUser> service)
+        IUserService service)
     {
         _logger = logger;
         _mapper = mapper;
@@ -34,7 +34,7 @@ public class UsersController : ControllerBase
 
         if (mappedUser is null) return BadRequest();
 
-        var result = await _service.CreateAsync(mappedUser);
+        var result = await _service.CreateAsync(mappedUser, model.Password!);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 

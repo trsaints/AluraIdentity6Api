@@ -28,7 +28,7 @@ public static class StartupExtensions
 
     public static void AddAppServices(this IServiceCollection services)
     {
-        services.AddScoped<IModelService<AppUser>, UserService>();
+        services.AddScoped<IUserService, UserService>();
     }
 
     /// <summary>

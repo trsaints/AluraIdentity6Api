@@ -2,7 +2,6 @@ using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Startup;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
