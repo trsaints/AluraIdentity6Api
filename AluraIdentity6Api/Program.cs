@@ -2,6 +2,7 @@ using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Startup;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,27 @@ builder.Services.ConfigureIdentity();
 
 builder.Services.AddAppServices();
 
+builder.Services.AddExceptionHandler(options =>
+{
+    options.ExceptionHandler = async context =>
+    {
+        var exception = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+
+        if (exception is null) return;
+
+        context.Response.ContentType = "application/json";
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        var response = new 
+        {
+            Message = "An unexpected error occurred.",
+            Details = exception.Message
+        };
+
+        await context.Response.WriteAsJsonAsync(response);
+    };
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,6 +54,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseHsts();
+app.UseExceptionHandler();
 
 app.UseAuthorization();
 
