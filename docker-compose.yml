@@ -4,7 +4,10 @@ services:
     build:
       context: .
       dockerfile: AluraIdentity6Api/Dockerfile
-
+    environment:
+      JWT_KEY: ${JWT_KEY}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE}
   db:
       image: postgres:15
       environment:
