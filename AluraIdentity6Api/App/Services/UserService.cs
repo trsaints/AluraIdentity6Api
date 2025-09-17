@@ -31,10 +31,10 @@ public class UserService : IUserService
 
         var result = await _manager.CreateAsync(user, password);
 
-        if (result.Succeeded)
-            return ServiceResult<AppUser>.Ok(user);
+        if (!result.Succeeded)
+            return ServiceResult<AppUser>.Fail(result.Errors.Select(e => e.Description));
 
-        return ServiceResult<AppUser>.Fail(result.Errors.Select(e => e.Description));
+        return ServiceResult<AppUser>.Ok(user);
     }
 
     public Task<ServiceResult<AppUser>> CreateAsync(AppUser entity)
