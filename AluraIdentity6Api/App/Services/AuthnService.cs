@@ -17,6 +17,8 @@ public class AuthnService : IAuthnService
         var jwtAudience = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_AUDIENCE) 
             ?? throw new ApplicationException("JWT_AUDIENCE não configurada");
 
+        var expiration = DateTime.UtcNow.AddHours(1);
+
         Claim[] userClaims =
         [
             new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
@@ -25,6 +27,7 @@ public class AuthnService : IAuthnService
             new Claim(ClaimTypes.Name, user.FullName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Aud, jwtAudience),
+            new Claim(JwtRegisteredClaimNames.Exp, expiration.ToString())
         ];
 
         var jwtKey = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_KEY) 
@@ -32,7 +35,6 @@ public class AuthnService : IAuthnService
 
         var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey));
 
-        var expiration = DateTime.UtcNow.AddHours(1);
 
         JwtSecurityToken token = new(jwtIssuer, 
             jwtAudience, 
