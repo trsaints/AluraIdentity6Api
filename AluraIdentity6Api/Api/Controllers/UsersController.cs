@@ -16,14 +16,17 @@ public class UsersController : ControllerBase
     private readonly ILogger<UsersController> _logger;
     private readonly IMapper<AppUser, CreateUserModel> _mapper;
     private readonly IUserService _service;
+    private readonly IAuthnService _authnService;
 
     public UsersController(ILogger<UsersController> logger,
         IMapper<AppUser, CreateUserModel> mapper,
-        IUserService service)
+        IUserService service,
+        IAuthnService authnService)
     {
         _logger = logger;
         _mapper = mapper;
         _service = service;
+        _authnService = authnService;
     }
 
     [HttpPost]
@@ -50,8 +53,23 @@ public class UsersController : ControllerBase
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 
-        var dto = _mapper.ToRequestModel(result.Data!);
+        var newTokenResult = _authnService.GenerateToken(result.Data!);
 
-        return Ok(dto);
+        Response.Cookies.Append("auth_token",
+            newTokenResult.Data!.Token,
+            new CookieOptions()
+            {
+                Expires = newTokenResult.Data.Expiration,
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+
+        var authResponseNoToken = newTokenResult.Data with
+        {
+            Token = string.Empty
+        };
+
+        return Ok(authResponseNoToken);
     }
 }
