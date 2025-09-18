@@ -5,5 +5,5 @@ namespace AluraIdentity6Api.App.Services.Interfaces;
 
 public interface IAuthnService
 {
-    public ServiceResult<JwtSecurityToken> GenerateToken(AppUser user);
+    public ServiceResult<AuthResponse> GenerateToken(AppUser user);
 }

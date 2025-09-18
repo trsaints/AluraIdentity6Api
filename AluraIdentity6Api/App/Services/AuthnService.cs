@@ -9,13 +9,13 @@ namespace AluraIdentity6Api.App.Services;
 
 public class AuthnService : IAuthnService
 {
-    public ServiceResult<JwtSecurityToken> GenerateToken(AppUser user)
+    public ServiceResult<AuthResponse> GenerateToken(AppUser user)
     {
         var jwtIssuer = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_ISSUER) 
-            ?? throw new InvalidOperationException("JWT_ISSUER não configurada");
+            ?? throw new ApplicationException("JWT_ISSUER não configurada");
 
         var jwtAudience = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_AUDIENCE) 
-            ?? throw new InvalidOperationException("JWT_AUDIENCE não configurada");
+            ?? throw new ApplicationException("JWT_AUDIENCE não configurada");
 
         Claim[] userClaims =
         [
@@ -32,14 +32,22 @@ public class AuthnService : IAuthnService
 
         var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey));
 
+        var expiration = DateTime.UtcNow.AddHours(1);
+
         JwtSecurityToken token = new(jwtIssuer, 
             jwtAudience, 
             userClaims,
             notBefore: DateTime.UtcNow,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: expiration,
             signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
         );
 
-        return ServiceResult<JwtSecurityToken>.Ok(token);
+        AuthResponse result = new()
+        {
+            Token = new JwtSecurityTokenHandler().WriteToken(token),
+            Expiration = expiration
+        };
+
+        return ServiceResult<AuthResponse>.Ok(result);
     }
 }
