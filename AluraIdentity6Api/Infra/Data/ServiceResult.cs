@@ -1,6 +1,6 @@
 ﻿using AluraIdentity6Api.App.Data.Models.Interfaces;
 
-namespace AluraIdentity6Api.App.Data.Models;
+namespace AluraIdentity6Api.Infra.Data;
 
 public class ServiceResult<T> : IServiceResult<T>
 {

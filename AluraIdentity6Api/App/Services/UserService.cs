@@ -1,6 +1,7 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.App.Services.Interfaces;
 using AluraIdentity6Api.App.Validations;
+using AluraIdentity6Api.Infra.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace AluraIdentity6Api.App.Services;

@@ -1,5 +1,5 @@
-﻿using AluraIdentity6Api.App.Data.Models;
-using AluraIdentity6Api.App.Data.Models.Interfaces;
+﻿using AluraIdentity6Api.App.Data.Models.Interfaces;
+using AluraIdentity6Api.Infra.Data;
 
 namespace AluraIdentity6Api.App.Services.Interfaces;
 
