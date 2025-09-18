@@ -2,6 +2,8 @@
 using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.App.Services;
 using AluraIdentity6Api.App.Services.Interfaces;
+using AluraIdentity6Api.Infra.Authn;
+using AluraIdentity6Api.Infra.Authn.Interfaces;
 using AluraIdentity6Api.Infra.Data.Constants;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Data.Mappers;

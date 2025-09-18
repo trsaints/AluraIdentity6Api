@@ -1,11 +1,11 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
-using AluraIdentity6Api.App.Services.Interfaces;
+using AluraIdentity6Api.Infra.Authn.Interfaces;
 using AluraIdentity6Api.Infra.Data.Constants;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace AluraIdentity6Api.App.Services;
+namespace AluraIdentity6Api.Infra.Authn;
 
 public class AuthnService : IAuthnService
 {

@@ -1,7 +1,6 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
-using System.IdentityModel.Tokens.Jwt;
 
-namespace AluraIdentity6Api.App.Services.Interfaces;
+namespace AluraIdentity6Api.Infra.Authn.Interfaces;
 
 public interface IAuthnService
 {
