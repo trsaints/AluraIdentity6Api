@@ -1,4 +1,4 @@
-﻿namespace AluraIdentity6Api.App.Data.Models;
+﻿namespace AluraIdentity6Api.Infra.Authn;
 
 public record AuthResponse
 {
