@@ -1,4 +1,5 @@
 using AluraIdentity6Api.App.Data.Models;
+using AluraIdentity6Api.Infra.Authn;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Startup;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +21,7 @@ builder.Services.AddIdentityCore<AppUser>()
     .AddSignInManager();
 
 builder.Services.ConfigureIdentity();
+builder.Services.AddAuthnConfiguration();
 
 builder.Services.AddAppServices();
 builder.Services.AddSingleton(TimeProvider.System);

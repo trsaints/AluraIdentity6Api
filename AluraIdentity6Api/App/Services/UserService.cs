@@ -2,7 +2,6 @@
 using AluraIdentity6Api.App.Services.Interfaces;
 using AluraIdentity6Api.App.Validations;
 using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 
 namespace AluraIdentity6Api.App.Services;
 
