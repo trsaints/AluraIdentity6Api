@@ -23,12 +23,13 @@ public class AuthnService : IAuthnService
         Claim[] userClaims =
         [
             new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Sid, user.Cpf),
-            new Claim(ClaimTypes.Name, user.FullName),
+            new Claim(ClaimTypes.Name, user.FullName!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Aud, jwtAudience),
-            new Claim(JwtRegisteredClaimNames.Exp, expiration.ToString())
+            new Claim(JwtRegisteredClaimNames.Exp, expiration.ToString()),
+            new Claim(ClaimTypes.DateOfBirth, user.BirthDate?.ToString("yyyy-MM-dd")!)
         ];
 
         var jwtKey = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_KEY) 
