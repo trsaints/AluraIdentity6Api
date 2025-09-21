@@ -21,13 +21,9 @@ public class UserService : IUserService
     public async Task<ServiceResult<AppUser>> CreateAsync(AppUser user, string password)
     {
         ValidCpfSpecification firstSpec = new();
-        MinRequiredAgeSpecification secondSpec = new();
 
         if (!firstSpec.IsSatisfiedBy(user))
             return ServiceResult<AppUser>.Fail(["CPF Inválido"]);
-
-        if (!secondSpec.IsSatisfiedBy(user))
-            return ServiceResult<AppUser>.Fail(["Usuário deve ter no mínimo 21 anos"]);
 
         var result = await _manager.CreateAsync(user, password);
 
@@ -52,9 +48,14 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<ServiceResult<AppUser>> GetByIdAsync(int id)
+    public async Task<ServiceResult<AppUser>> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var user = await _manager.FindByIdAsync(id.ToString());
+
+        if (user is null)
+            return ServiceResult<AppUser>.Fail(["Usuário não encontrado"]);
+
+        return ServiceResult<AppUser>.Ok(user);
     }
 
     public async Task<ServiceResult<AppUser>> LoginAsync(string email, string password)

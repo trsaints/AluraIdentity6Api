@@ -73,4 +73,18 @@ public class UsersController : ControllerBase
 
         return Ok(authResponseNoToken);
     }
+
+    [HttpGet("{id:int}")]
+    [Authorize(Policy = AuthorizationConstants.MinimumAgePolicy)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var result = await _service.GetByIdAsync(id);
+
+        if (!result.Succeeded) return BadRequest(result.Errors);
+
+        var dto = _mapper.ToRequestModel(result.Data!);
+
+        return Ok(dto);
+    }
 }
