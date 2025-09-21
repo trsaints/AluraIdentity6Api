@@ -1,7 +1,9 @@
 using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.Infra.Authn;
+using AluraIdentity6Api.Infra.Authn.Middlewares;
 using AluraIdentity6Api.Infra.Data.Database;
 using AluraIdentity6Api.Infra.Startup;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDataMappers();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddDataProtection();
+builder.Services.AddSingleton<IAuthorizationHandler, MinAgeAuthorizationHandler>();
 builder.Services.AddIdentityCore<AppUser>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders()
@@ -60,6 +63,7 @@ app.UseHttpsRedirection();
 app.UseHsts();
 app.UseExceptionHandler();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
