@@ -4,15 +4,15 @@ using System.Text.RegularExpressions;
 
 namespace AluraIdentity6Api.App.Validations;
 
-public class ValidCpfSpecification : ISpecification<AppUser>
+public partial class ValidCpfSpecification : ISpecification<AppUser>
 {
-    private int[] FirstMultipliers => [10, 9, 8, 7, 6, 5, 4, 3, 2];
-    private int[] LastMultipliers => [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
+    private static int[] FirstMultipliers => [10, 9, 8, 7, 6, 5, 4, 3, 2];
+    private static int[] LastMultipliers => [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
 
     public bool IsSatisfiedBy(AppUser entity)
     {
+        var ignorableChars = IgnorableCpfCharacters();
         var cpf = entity.Cpf.Trim();
-        Regex ignorableChars = new("[\\.-]");
 
         ignorableChars.Replace(cpf, string.Empty);
 
@@ -49,4 +49,7 @@ public class ValidCpfSpecification : ISpecification<AppUser>
             return false;
         }
     }
+
+    [GeneratedRegex("[\\.-]")]
+    private static partial Regex IgnorableCpfCharacters();
 }
