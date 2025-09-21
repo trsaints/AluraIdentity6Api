@@ -18,6 +18,7 @@ public static class AuthnExtensions
             {
                 policy.AddRequirements(new MinimumAgeRequirement(21));
                 policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
+                policy.RequireAuthenticatedUser();
             });
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -29,7 +30,7 @@ public static class AuthnExtensions
             {
                 OnMessageReceived = context =>
                 {
-                    var token = context.Request.Cookies["auth_token"];
+                    var token = context.Request.Cookies[AuthnService.AuthTokenName];
 
                     if (!string.IsNullOrEmpty(token))
                     {

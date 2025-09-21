@@ -10,6 +10,8 @@ namespace AluraIdentity6Api.Infra.Authn;
 
 public class AuthnService : IAuthnService
 {
+    public static readonly string AuthTokenName = "auth_token";
+
     public ServiceResult<AuthResponse> GenerateToken(AppUser user)
     {
         var jwtIssuer = Environment.GetEnvironmentVariable(EnvironmentVariables.JWT_ISSUER) 
