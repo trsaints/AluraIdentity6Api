@@ -1,88 +1,58 @@
 ﻿using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.Infra.Authn.Requirements;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace AluraIdentity6Api.Infra.Authn.Middlewares;
 
 public class MinAgeAuthorizationHandler : AuthorizationHandler<MinimumAgeRequirement>
 {
-    private readonly UserManager<AppUser> _userManager;
+    private readonly ILogger<MinAgeAuthorizationHandler> _logger;
 
-    public MinAgeAuthorizationHandler(UserManager<AppUser> userManager)
+    public MinAgeAuthorizationHandler(ILogger<MinAgeAuthorizationHandler> logger)
     {
-        _userManager = userManager;
+        _logger = logger;
     }
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context,
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
         MinimumAgeRequirement requirement)
     {
-        Console.WriteLine("MinAgeAuthorizationHandler: Iniciando verificação de autorização");
-        Console.WriteLine($"User.Identity.IsAuthenticated: {context.User.Identity?.IsAuthenticated}");
-        Console.WriteLine($"Claims count: {context.User.Claims.Count()}");
-
-        // Log todos os claims do usuário
-        foreach (var claim in context.User.Claims)
-        {
-            Console.WriteLine($"  User Claim: {claim.Type} = {claim.Value}");
-        }
-
-        // Primeiro, tentar obter a data de nascimento do claim
         var dateOfBirthClaim = context.User.FindFirst(c => c.Type == ClaimTypes.DateOfBirth);
 
-        DateTime? birthDate = null;
+        if (!DateTime.TryParse(dateOfBirthClaim?.Value ?? string.Empty, 
+            out var userBirthDate))
+        {
+            _logger.LogError("Failed to parse date of birth claim for user {User}. Claim value: {ClaimValue}",
+                context.User.Identity?.Name ?? "<unknown>",
+                dateOfBirthClaim?.Value ?? "<null>");
 
-        if (dateOfBirthClaim != null && DateTime.TryParse(dateOfBirthClaim.Value, out var parsedDate))
-        {
-            birthDate = parsedDate;
-            Console.WriteLine($"MinAgeAuthorizationHandler: Data de nascimento obtida do claim: {birthDate}");
-        }
-        else
-        {
-            Console.WriteLine("MinAgeAuthorizationHandler: Claim DateOfBirth não encontrado, buscando no banco");
-            
-            // Se não conseguir do claim, buscar do banco de dados
-            var user = await _userManager.GetUserAsync(context.User);
-            if (user != null)
-            {
-                birthDate = user.BirthDate;
-                Console.WriteLine($"MinAgeAuthorizationHandler: Data de nascimento obtida do banco: {birthDate}");
-            }
-            else
-            {
-                Console.WriteLine("MinAgeAuthorizationHandler: Usuário não encontrado no banco");
-            }
-        }
-
-        if (birthDate == null)
-        {
-            Console.WriteLine("MinAgeAuthorizationHandler: FAIL - Data de nascimento não encontrada");
             context.Fail();
-            return;
+
+            return Task.CompletedTask;
         }
 
-        // Calcular idade
         var today = DateTime.Today;
-        var age = today.Year - birthDate.Value.Year;
+        var age = today.Year - userBirthDate.Year;
 
-        if (birthDate > today.AddYears(-age))
+        if (userBirthDate > today.AddYears(-age))
         {
             age--;
         }
 
-        Console.WriteLine($"MinAgeAuthorizationHandler: Idade calculada: {age}, Idade mínima requerida: {requirement.MinimumAge}");
-
-        // Verificar se atende ao requisito de idade mínima
         if (age >= requirement.MinimumAge)
         {
-            Console.WriteLine("MinAgeAuthorizationHandler: SUCCESS - Requisito atendido");
             context.Succeed(requirement);
+
+            return Task.CompletedTask;
         }
-        else
-        {
-            Console.WriteLine("MinAgeAuthorizationHandler: FAIL - Idade insuficiente");
-            context.Fail();
-        }
+
+        _logger.LogError("Failed to authorize user {User} for minimum age {MinAge}. User age: {Age}",
+            context.User.Identity?.Name ?? "<unknown>",
+            requirement.MinimumAge,
+            age);
+
+        context.Fail();
+
+        return Task.CompletedTask;
     }
 }
