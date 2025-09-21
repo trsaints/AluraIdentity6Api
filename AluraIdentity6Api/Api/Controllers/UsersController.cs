@@ -1,6 +1,7 @@
 ﻿using AluraIdentity6Api.Api.RequestModels;
 using AluraIdentity6Api.App.Data.Models;
 using AluraIdentity6Api.App.Services.Interfaces;
+using AluraIdentity6Api.Infra.Authn;
 using AluraIdentity6Api.Infra.Authn.Constants;
 using AluraIdentity6Api.Infra.Authn.Interfaces;
 using AluraIdentity6Api.Infra.Data.Mappers.Interfaces;
@@ -58,7 +59,7 @@ public class UsersController : ControllerBase
 
         var newTokenResult = _authnService.GenerateToken(result.Data!);
 
-        Response.Cookies.Append("auth_token",
+        Response.Cookies.Append(AuthnService.AuthTokenName,
             newTokenResult.Data!.Token,
             new CookieOptions()
             {

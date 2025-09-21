@@ -39,7 +39,6 @@ public class AuthnService : IAuthnService
 
         var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey));
 
-
         JwtSecurityToken token = new(jwtIssuer, 
             jwtAudience, 
             userClaims,
